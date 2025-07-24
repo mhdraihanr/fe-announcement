@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { User, Announcement } from "@/types";
+import { initialAnnouncements, departments } from "@/app/announcements/data";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,6 +32,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Label } from "@/components/ui/label";
+import {
   Plus,
   Pin,
   Eye,
@@ -38,6 +46,10 @@ import {
   MessageSquare,
   Filter,
   Check,
+  Edit,
+  Trash2,
+  MoreVertical,
+  PinOff,
 } from "lucide-react";
 
 interface AnnouncementBoardProps {
@@ -47,135 +59,26 @@ interface AnnouncementBoardProps {
 export default function AnnouncementBoard({
   currentUser,
 }: AnnouncementBoardProps) {
-  const [announcements, setAnnouncements] = useState<Announcement[]>([
-    {
-      id: 1,
-      title: "System Maintenance Scheduled",
-      content:
-        "We will be performing system maintenance on Sunday, March 10th from 2:00 AM to 4:00 AM. During this time, the system will be unavailable.",
-      author: "IT Department",
-      department: "IT",
-      priority: "high",
-      pinned: true,
-      date: "2024-03-08",
-      views: 145,
-      likes: 12,
-      comments: 3,
-      tags: ["maintenance", "system"],
-      readBy: [1, 2, 3],
-      viewers: [
-        {
-          userId: 1,
-          name: "John Doe",
-          avatar: "/api/placeholder/32/32",
-          readAt: "2024-03-08 09:15",
-          department: "Sales",
-          role: "Manager",
-        },
-        {
-          userId: 2,
-          name: "Sarah Johnson",
-          avatar: "/api/placeholder/32/32",
-          readAt: "2024-03-08 09:30",
-          department: "Marketing",
-          role: "Manager",
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: "New Employee Welcome",
-      content:
-        "Please join us in welcoming Sarah Johnson to the Marketing team. She will be starting as a Marketing Specialist on Monday.",
-      author: "HR Department",
-      department: "HR",
-      priority: "medium",
-      pinned: false,
-      date: "2024-03-07",
-      views: 89,
-      likes: 25,
-      comments: 8,
-      tags: ["welcome", "team"],
-      readBy: [1],
-      viewers: [
-        {
-          userId: 1,
-          name: "John Doe",
-          avatar: "/api/placeholder/32/32",
-          readAt: "2024-03-07 10:15",
-          department: "Sales",
-          role: "Manager",
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: "Q1 Company Meeting",
-      content:
-        "The quarterly company meeting is scheduled for March 15th at 10:00 AM in the main conference room. Attendance is mandatory for all employees.",
-      author: "Management",
-      department: "Management",
-      priority: "high",
-      pinned: true,
-      date: "2024-03-06",
-      views: 203,
-      likes: 18,
-      comments: 5,
-      tags: ["meeting", "quarterly"],
-      readBy: [1, 2, 3, 4],
-      viewers: [
-        {
-          userId: 1,
-          name: "John Doe",
-          avatar: "/api/placeholder/32/32",
-          readAt: "2024-03-06 11:00",
-          department: "Sales",
-          role: "Manager",
-        },
-      ],
-    },
-    {
-      id: 4,
-      title: "Office Lunch Event",
-      content:
-        "Join us for a catered lunch event next Friday at 12:00 PM. Please RSVP by Wednesday to help us plan accordingly.",
-      author: "Social Committee",
-      department: "General",
-      priority: "low",
-      pinned: false,
-      date: "2024-03-05",
-      views: 156,
-      likes: 45,
-      comments: 12,
-      tags: ["social", "lunch"],
-      readBy: [],
-      viewers: [],
-    },
-  ]);
+  const [announcements, setAnnouncements] =
+    useState<Announcement[]>(initialAnnouncements);
 
   const [newAnnouncement, setNewAnnouncement] = useState({
     title: "",
     content: "",
     priority: "medium",
-    department: "",
+    departments: [] as string[],
     tags: "",
   });
 
   const [filterPriority, setFilterPriority] = useState("all");
   const [filterDepartment, setFilterDepartment] = useState("all");
+  const [editingAnnouncement, setEditingAnnouncement] =
+    useState<Announcement | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  const departments = [
-    "IT",
-    "HR",
-    "Management",
-    "Sales",
-    "Marketing",
-    "Finance",
-    "Engineering",
-    "General",
-  ];
-
-  const canCreateAnnouncement = ["Admin", "Manager"].includes(currentUser.role);
+  const canCreateAnnouncement = ["Admin", "SVP", "VP", "Officer"].includes(
+    currentUser.role
+  );
 
   const filteredAnnouncements = announcements
     .filter(
@@ -199,7 +102,7 @@ export default function AnnouncementBoard({
       title: newAnnouncement.title,
       content: newAnnouncement.content,
       author: currentUser.name,
-      department: newAnnouncement.department,
+      department: newAnnouncement.departments.join(", "),
       priority: newAnnouncement.priority as "high" | "medium" | "low",
       pinned: false,
       date: new Date().toISOString().split("T")[0],
@@ -219,33 +122,120 @@ export default function AnnouncementBoard({
       title: "",
       content: "",
       priority: "medium",
-      department: "",
+      departments: [],
       tags: "",
     });
+    setDialogOpen(false);
+  };
+
+  const handleEditAnnouncement = (announcement: Announcement) => {
+    setEditingAnnouncement(announcement);
+    setNewAnnouncement({
+      title: announcement.title,
+      content: announcement.content,
+      priority: announcement.priority,
+      departments: announcement.department.split(", "),
+      tags: announcement.tags.join(", "),
+    });
+    setDialogOpen(true);
+  };
+
+  const handleUpdateAnnouncement = () => {
+    if (!editingAnnouncement) return;
+
+    const updatedAnnouncement: Announcement = {
+      ...editingAnnouncement,
+      title: newAnnouncement.title,
+      content: newAnnouncement.content,
+      department: newAnnouncement.departments.join(", "),
+      priority: newAnnouncement.priority as "high" | "medium" | "low",
+      tags: newAnnouncement.tags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag),
+    };
+
+    setAnnouncements((prev) =>
+      prev.map((announcement) =>
+        announcement.id === editingAnnouncement.id
+          ? updatedAnnouncement
+          : announcement
+      )
+    );
+
+    setEditingAnnouncement(null);
+    setNewAnnouncement({
+      title: "",
+      content: "",
+      priority: "medium",
+      departments: [],
+      tags: "",
+    });
+    setDialogOpen(false);
+  };
+
+  const handleDeleteAnnouncement = (announcementId: number) => {
+    setAnnouncements((prev) =>
+      prev.filter((announcement) => announcement.id !== announcementId)
+    );
+  };
+
+  const canEditOrDelete = (announcement: Announcement) => {
+    return (
+      announcement.author === currentUser.name || currentUser.role === "Admin"
+    );
+  };
+
+  const canPin = (announcement: Announcement) => {
+    return (
+      ["Admin", "SVP", "VP"].includes(currentUser.role) ||
+      announcement.author === currentUser.name
+    );
+  };
+
+  const handleTogglePin = (announcementId: number) => {
+    setAnnouncements((prev) =>
+      prev.map((announcement) =>
+        announcement.id === announcementId
+          ? { ...announcement, pinned: !announcement.pinned }
+          : announcement
+      )
+    );
   };
 
   const markAsRead = (announcementId: number) => {
     setAnnouncements((prev) =>
       prev.map((announcement) => {
-        if (
-          announcement.id === announcementId &&
-          !announcement.readBy.includes(currentUser.id)
-        ) {
-          return {
-            ...announcement,
-            readBy: [...announcement.readBy, currentUser.id],
-            viewers: [
-              ...announcement.viewers,
-              {
-                userId: currentUser.id,
-                name: currentUser.name,
-                avatar: currentUser.avatar,
-                readAt: new Date().toISOString(),
-                department: currentUser.department,
-                role: currentUser.role,
-              },
-            ],
-          };
+        if (announcement.id === announcementId) {
+          const isAlreadyRead = announcement.readBy.includes(currentUser.id);
+
+          if (!isAlreadyRead) {
+            return {
+              ...announcement,
+              readBy: [...announcement.readBy, currentUser.id],
+              views: announcement.views + 1,
+              viewers: [
+                ...announcement.viewers,
+                {
+                  userId: currentUser.id,
+                  name: currentUser.name,
+                  avatar: currentUser.avatar,
+                  readAt: new Date().toISOString(),
+                  department: currentUser.department,
+                  role: currentUser.role,
+                },
+              ],
+            };
+          } else {
+            // If already read, unmark it
+            return {
+              ...announcement,
+              readBy: announcement.readBy.filter((id) => id !== currentUser.id),
+              viewers: announcement.viewers.filter(
+                (viewer) => viewer.userId !== currentUser.id
+              ),
+            };
+          }
         }
         return announcement;
       })
@@ -275,18 +265,24 @@ export default function AnnouncementBoard({
           </p>
         </div>
         {canCreateAnnouncement && (
-          <Dialog>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
                 New Announcement
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[525px]">
+            <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Create New Announcement</DialogTitle>
+                <DialogTitle>
+                  {editingAnnouncement
+                    ? "Edit Announcement"
+                    : "Create New Announcement"}
+                </DialogTitle>
                 <DialogDescription>
-                  Share important updates with your team
+                  {editingAnnouncement
+                    ? "Update your announcement"
+                    : "Share important updates with your team"}
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
@@ -311,41 +307,66 @@ export default function AnnouncementBoard({
                   }
                   className="min-h-[100px]"
                 />
-                <div className="grid grid-cols-2 gap-4">
-                  <Select
-                    value={newAnnouncement.priority}
-                    onValueChange={(value) =>
-                      setNewAnnouncement({
-                        ...newAnnouncement,
-                        priority: value,
-                      })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Priority" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="low">Low Priority</SelectItem>
-                      <SelectItem value="medium">Medium Priority</SelectItem>
-                      <SelectItem value="high">High Priority</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Input
-                    placeholder="Select Department"
-                    value={newAnnouncement.department}
-                    onChange={(e) =>
-                      setNewAnnouncement({
-                        ...newAnnouncement,
-                        department: e.target.value,
-                      })
-                    }
-                    list="departments"
-                  />
-                  <datalist id="departments">
+                <Select
+                  value={newAnnouncement.priority}
+                  onValueChange={(value) =>
+                    setNewAnnouncement({
+                      ...newAnnouncement,
+                      priority: value,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low Priority</SelectItem>
+                    <SelectItem value="medium">Medium Priority</SelectItem>
+                    <SelectItem value="high">High Priority</SelectItem>
+                  </SelectContent>
+                </Select>
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">
+                    Pilih Departemen:
+                  </Label>
+                  <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
                     {departments.map((dept) => (
-                      <option key={dept} value={dept} />
+                      <div key={dept} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id={dept}
+                          name="departments"
+                          aria-label={`Select ${dept}`}
+                          checked={newAnnouncement.departments.includes(dept)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setNewAnnouncement({
+                                ...newAnnouncement,
+                                departments: [
+                                  ...newAnnouncement.departments,
+                                  dept,
+                                ],
+                              });
+                            } else {
+                              setNewAnnouncement({
+                                ...newAnnouncement,
+                                departments: newAnnouncement.departments.filter(
+                                  (d) => d !== dept
+                                ),
+                              });
+                            }
+                          }}
+                          className="rounded border-gray-300 text-primary focus:ring-primary"
+                        />
+                        <Label
+                          htmlFor={dept}
+                          className="text-sm cursor-pointer"
+                        >
+                          {dept}
+                        </Label>
+                      </div>
                     ))}
-                  </datalist>
+                  </div>
                 </div>
                 <Input
                   placeholder="Tags (comma separated)"
@@ -359,9 +380,35 @@ export default function AnnouncementBoard({
                 />
               </div>
               <DialogFooter>
-                <Button onClick={handleCreateAnnouncement}>
-                  Post Announcement
+                <Button
+                  onClick={
+                    editingAnnouncement
+                      ? handleUpdateAnnouncement
+                      : handleCreateAnnouncement
+                  }
+                >
+                  {editingAnnouncement
+                    ? "Update Announcement"
+                    : "Post Announcement"}
                 </Button>
+                {editingAnnouncement && (
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setEditingAnnouncement(null);
+                      setNewAnnouncement({
+                        title: "",
+                        content: "",
+                        priority: "medium",
+                        departments: [],
+                        tags: "",
+                      });
+                      setDialogOpen(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                )}
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -398,11 +445,11 @@ export default function AnnouncementBoard({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Departments</SelectItem>
-                <SelectItem value="IT">IT</SelectItem>
-                <SelectItem value="HR">HR</SelectItem>
-                <SelectItem value="Management">Management</SelectItem>
-                <SelectItem value="Sales">Sales</SelectItem>
-                <SelectItem value="Marketing">Marketing</SelectItem>
+                {departments.map((dept) => (
+                  <SelectItem key={dept} value={dept}>
+                    {dept}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -445,11 +492,55 @@ export default function AnnouncementBoard({
                     </span>
                   </div>
                 </div>
-                <Avatar>
-                  <AvatarFallback>
-                    {announcement.author.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="flex items-center gap-2">
+                  {(canEditOrDelete(announcement) || canPin(announcement)) && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        {canEditOrDelete(announcement) && (
+                          <DropdownMenuItem
+                            onClick={() => handleEditAnnouncement(announcement)}
+                          >
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit
+                          </DropdownMenuItem>
+                        )}
+                        {canPin(announcement) && (
+                          <DropdownMenuItem
+                            onClick={() => handleTogglePin(announcement.id)}
+                          >
+                            {announcement.pinned ? (
+                              <PinOff className="mr-2 h-4 w-4" />
+                            ) : (
+                              <Pin className="mr-2 h-4 w-4" />
+                            )}
+                            {announcement.pinned ? "Unpin" : "Pin"}
+                          </DropdownMenuItem>
+                        )}
+                        {canEditOrDelete(announcement) && (
+                          <DropdownMenuItem
+                            onClick={() =>
+                              handleDeleteAnnouncement(announcement.id)
+                            }
+                            className="text-destructive"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete
+                          </DropdownMenuItem>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                  <Avatar>
+                    <AvatarFallback>
+                      {announcement.author.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
               </div>
             </CardHeader>
             <CardContent>
@@ -477,17 +568,27 @@ export default function AnnouncementBoard({
                     <MessageSquare className="h-4 w-4" />
                     {announcement.comments}
                   </Button>
-                  {!announcement.readBy.includes(currentUser.id) && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="gap-1"
-                      onClick={() => markAsRead(announcement.id)}
-                    >
+                  <Button
+                    variant={
+                      announcement.readBy.includes(currentUser.id)
+                        ? "default"
+                        : "outline"
+                    }
+                    size="sm"
+                    className={`gap-1 ${
+                      announcement.readBy.includes(currentUser.id)
+                        ? "bg-green-500 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700"
+                        : "text-black dark:text-white border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
+                    }`}
+                    onClick={() => markAsRead(announcement.id)}
+                  >
+                    {announcement.readBy.includes(currentUser.id) && (
                       <Check className="h-4 w-4" />
-                      Mark as Read
-                    </Button>
-                  )}
+                    )}
+                    {announcement.readBy.includes(currentUser.id)
+                      ? "Read"
+                      : "Mark as Read"}
+                  </Button>
                 </div>
               </div>
             </CardContent>

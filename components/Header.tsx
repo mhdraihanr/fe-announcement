@@ -11,6 +11,7 @@ import {
   UserIcon,
   Menu,
   Palette,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,9 +55,10 @@ export default function Header({
 
   const roles: Array<{ value: User["role"]; label: string }> = [
     { value: "Admin", label: "Administrator" },
-    { value: "Manager", label: "Manager" },
+    { value: "SVP", label: "Superior Vice President" },
+    { value: "VP", label: "Vice President" },
+    { value: "Officer", label: "Officer" },
     { value: "Employee", label: "Employee" },
-    { value: "Guest", label: "Guest" },
   ];
 
   const handleRoleChange = (newRole: User["role"]) => {
@@ -71,52 +73,52 @@ export default function Header({
   return (
     <header className="bg-background border-b border-border px-6 py-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-3">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden"
           >
-            <Menu className="h-5 w-5" />
+            {sidebarOpen ? (
+              <X className="h-4 w-4" />
+            ) : (
+              <Menu className="h-4 w-4" />
+            )}
           </Button>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
             <img
               src="/download__1_-removebg-preview.png"
               alt="PT. Pupuk Kujang Logo"
-              width={40}
-              height={40}
+              width={32}
+              height={32}
               className="flex-shrink-0 object-contain"
             />
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-xl font-semibold text-foreground">
               PT. Pupuk Kujang
             </h1>
           </div>
-          <Badge variant="outline" className="text-xs">
-            v2.0
-          </Badge>
         </div>
 
-        <div className="flex-1 max-w-md mx-8">
+        <div className="flex-1 max-w-sm mx-6">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
-              placeholder="Search documents, people, or announcements..."
-              className="pl-10"
+              placeholder="Search..."
+              className="pl-10 h-9"
             />
           </div>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-3">
           {/* Role Selector */}
           <Select value={currentUser.role} onValueChange={handleRoleChange}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="w-24 h-8 text-xs">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {roles.map((role) => (
-                <SelectItem key={role.value} value={role.value}>
-                  {role.label}
+                <SelectItem key={role.value} value={role.value} className="text-xs">
+                  {role.value}
                 </SelectItem>
               ))}
             </SelectContent>

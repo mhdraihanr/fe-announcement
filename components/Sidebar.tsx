@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useRouter, usePathname } from 'next/navigation';
-import type { User } from '@/types';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { useRouter, usePathname } from "next/navigation";
+import type { User } from "@/types";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Home,
   FileText,
@@ -14,8 +14,8 @@ import {
   Users,
   Settings,
   BarChart3,
-  Shield
-} from 'lucide-react';
+  Shield,
+} from "lucide-react";
 
 interface SidebarProps {
   currentUser: User;
@@ -25,7 +25,13 @@ interface SidebarProps {
   setSidebarOpen: (open: boolean) => void;
 }
 
-export default function Sidebar({ currentUser, activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: SidebarProps) {
+export default function Sidebar({
+  currentUser,
+  activeTab,
+  setActiveTab,
+  sidebarOpen,
+  setSidebarOpen,
+}: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -34,87 +40,83 @@ export default function Sidebar({ currentUser, activeTab, setActiveTab, sidebarO
     icon: any;
     key: string;
     href: string;
-    roles: User['role'][];
+    roles: User["role"][];
     badge?: string;
   }> = [
     {
-      name: 'Dashboard',
+      name: "Dashboard",
       icon: Home,
-      key: 'dashboard',
-      href: '/dashboard',
-      roles: ['Admin', 'Manager', 'Employee', 'Guest']
+      key: "dashboard",
+      href: "/dashboard",
+      roles: ["Admin", "SVP", "VP", "Officer", "Employee"],
     },
     {
-      name: 'Announcements',
+      name: "Announcements",
       icon: Bell,
-      key: 'announcements',
-      href: '/announcements',
-      roles: ['Admin', 'Manager', 'Employee', 'Guest'],
-      badge: '3'
+      key: "announcements",
+      href: "/announcements",
+      roles: ["Admin", "SVP", "VP", "Officer", "Employee"],
+      badge: "3",
     },
     {
-      name: 'Documents',
+      name: "Documents",
       icon: FileText,
-      key: 'documents',
-      href: '/documents',
-      roles: ['Admin', 'Manager', 'Employee', 'Guest']
+      key: "documents",
+      href: "/documents",
+      roles: ["Admin", "SVP", "VP", "Officer", "Employee"],
     },
     {
-      name: 'Chat',
+      name: "Chat",
       icon: MessageCircle,
-      key: 'chat',
-      href: '/chat',
-      roles: ['Admin', 'Manager', 'Employee'],
-      badge: '5'
+      key: "chat",
+      href: "/chat",
+      roles: ["Admin", "SVP", "VP", "Officer", "Employee"],
+      badge: "5",
     },
     {
-      name: 'Calendar',
+      name: "Calendar",
       icon: Calendar,
-      key: 'calendar',
-      href: '/calendar',
-      roles: ['Admin', 'Manager', 'Employee', 'Guest']
+      key: "calendar",
+      href: "/calendar",
+      roles: ["Admin", "SVP", "VP", "Officer", "Employee"],
     },
     {
-      name: 'Officer',
+      name: "Officer",
       icon: Users,
-      key: 'officer',
-      href: '/officer',
-      roles: ['Admin', 'Manager']
+      key: "officer",
+      href: "/officer",
+      roles: ["Admin", "SVP", "VP"],
     },
     {
-      name: 'Analytics',
+      name: "Analytics",
       icon: BarChart3,
-      key: 'analytics',
-      href: '/analytics',
-      roles: ['Admin', 'Manager']
+      key: "analytics",
+      href: "/analytics",
+      roles: ["Admin", "SVP", "VP"],
     },
     {
-      name: 'Admin Panel',
+      name: "Admin Panel",
       icon: Shield,
-      key: 'admin',
-      href: '/admin',
-      roles: ['Admin']
+      key: "admin",
+      href: "/admin",
+      roles: ["Admin"],
     },
     {
-      name: 'Settings',
+      name: "Settings",
       icon: Settings,
-      key: 'settings',
-      href: '/settings',
-      roles: ['Admin', 'Manager', 'Employee', 'Guest']
-    }
+      key: "settings",
+      href: "/settings",
+      roles: ["Admin", "SVP", "VP", "Officer", "Employee"],
+    },
   ];
 
-  const filteredNavigation = navigation.filter(item => 
+  const filteredNavigation = navigation.filter((item) =>
     item.roles.includes(currentUser.role)
   );
 
   const handleNavigation = (item: any) => {
     router.push(item.href);
     setActiveTab(item.key);
-    // Close sidebar on mobile after navigation
-    if (window.innerWidth < 1024) {
-      setSidebarOpen(false);
-    }
   };
 
   const isActive = (item: any) => {
@@ -122,19 +124,21 @@ export default function Sidebar({ currentUser, activeTab, setActiveTab, sidebarO
   };
 
   return (
-    <div className={cn(
-      "w-64 bg-background border-r border-border flex flex-col transition-transform duration-300 ease-in-out",
-      "lg:translate-x-0",
-      sidebarOpen ? "translate-x-0" : "-translate-x-full",
-      "lg:relative absolute inset-y-0 left-0 z-50"
-    )}>
+    <div
+      className={cn(
+        "bg-background border-r border-border flex flex-col transition-all duration-300 ease-in-out",
+        sidebarOpen ? "w-64" : "w-0 overflow-hidden"
+      )}
+    >
       <div className="p-6">
         <div className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mx-auto mb-3 flex items-center justify-center">
-            <span className="text-white font-bold text-xl">OH</span>
+          <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-full mx-auto mb-3 flex items-center justify-center">
+            <span className="text-white font-bold text-xl">TI</span>
           </div>
-          <h2 className="font-semibold text-foreground">Office Portal</h2>
-          <p className="text-sm text-muted-foreground">Collaborative Workspace</p>
+          <h2 className="font-semibold text-foreground">Department</h2>
+          <p className="text-sm text-muted-foreground">
+            Teknologi Informasi (TI/IT)
+          </p>
         </div>
       </div>
 

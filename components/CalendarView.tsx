@@ -30,6 +30,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { initialEvents } from "@/app/calendar/data";
 import {
   Calendar,
   Plus,
@@ -67,77 +68,17 @@ export default function CalendarView({ currentUser }: CalendarViewProps) {
     color: "blue",
   });
 
-  const [events, setEvents] = useState<Event[]>([
-    {
-      id: 1,
-      title: "Team Standup",
-      description: "Daily team synchronization meeting",
-      date: "2024-03-08",
-      startTime: "09:00",
-      endTime: "09:30",
-      location: "Conference Room A",
-      type: "meeting",
-      organizer: "Sarah Johnson",
-      attendees: ["John Doe", "Mike Wilson", "Sarah Johnson"],
-      department: "Sales",
-      isPrivate: false,
-      color: "blue",
-    },
-    {
-      id: 2,
-      title: "Q1 Budget Review",
-      description: "Quarterly budget analysis and planning session",
-      date: "2024-03-08",
-      startTime: "14:00",
-      endTime: "16:00",
-      location: "Boardroom",
-      type: "presentation",
-      organizer: "Management",
-      attendees: ["Managers", "Finance Team"],
-      department: "Finance",
-      isPrivate: true,
-      color: "red",
-    },
-    {
-      id: 3,
-      title: "System Maintenance",
-      description: "Scheduled server maintenance and updates",
-      date: "2024-03-10",
-      startTime: "02:00",
-      endTime: "04:00",
-      location: "Server Room",
-      type: "maintenance",
-      organizer: "IT Department",
-      attendees: ["IT Team"],
-      department: "IT",
-      isPrivate: false,
-      color: "orange",
-    },
-    {
-      id: 4,
-      title: "Company All-Hands",
-      description: "Monthly company-wide meeting",
-      date: "2024-03-15",
-      startTime: "10:00",
-      endTime: "11:30",
-      location: "Main Hall",
-      type: "presentation",
-      organizer: "CEO",
-      attendees: ["All Employees"],
-      department: "General",
-      isPrivate: false,
-      color: "green",
-    },
-  ]);
+  const [events, setEvents] = useState<Event[]>(initialEvents);
 
   const canViewEvent = (event: any) => {
     if (!event.isPrivate) return true;
     if (event.department === currentUser.department) return true;
-    if (["Admin", "Manager"].includes(currentUser.role)) return true;
+    if (["Administrator", "SVP", "VP", "Officer"].includes(currentUser.role))
+      return true;
     return false;
   };
 
-  const canCreateEvent = ["Admin", "Manager", "Employee"].includes(
+  const canCreateEvent = ["Administrator", "SVP", "VP"].includes(
     currentUser.role
   );
 

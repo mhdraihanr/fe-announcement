@@ -1,20 +1,19 @@
 export interface User {
   id: number;
   name: string;
-  role: 'Admin' | 'Manager' | 'Employee' | 'Guest';
-  position: 'Staff' | 'Officer' | 'VP' | 'SVP' | 'CEO';
+  role: "Admin" | "SVP" | "VP" | "Officer" | "Employee";
   department: string;
   avatar: string;
   email?: string;
   phone?: string;
   joinDate?: string;
-  reportingTo?: string;
+  status?: "active" | "inactive" | "on-leave";
 }
 
 export interface Officer {
   id: number;
   name: string;
-  position: 'Staff' | 'Officer' | 'VP' | 'SVP' | 'CEO';
+  position: "Admin" | "SVP" | "VP" | "Officer" | "Employee";
   department: string;
   email: string;
   phone: string;
@@ -22,17 +21,17 @@ export interface Officer {
   joinDate: string;
   reportingTo?: string;
   directReports?: number;
-  status: 'active' | 'inactive' | 'on-leave';
+  status: "active" | "inactive" | "on-leave";
 }
 
 export interface Document {
   id: number;
   name: string;
-  type: 'pdf' | 'document' | 'spreadsheet' | 'image';
+  type: "pdf" | "document" | "spreadsheet" | "image";
   size: string;
   uploadedBy: string;
   uploadDate: string;
-  accessLevel: 'Admin' | 'Manager' | 'Employee' | 'Guest';
+  accessLevel: "Administrator" | "SVP" | "VP" | "Officer" | "Employee";
   department: string;
   downloads: number;
   views: number;
@@ -52,10 +51,10 @@ export interface Message {
 export interface ChatChannel {
   id: string;
   name: string;
-  type: 'public' | 'private' | 'department';
+  type: "public" | "private" | "department";
   members: number;
   unread: number;
-  requiredRole: 'Admin' | 'Manager' | 'Employee' | 'Guest';
+  requiredRole: "Admin" | "SVP" | "VP" | "Officer" | "Employee";
   department?: string;
 }
 
@@ -67,7 +66,7 @@ export interface Event {
   startTime: string;
   endTime: string;
   location: string;
-  type: 'meeting' | 'presentation' | 'training' | 'maintenance';
+  type: "meeting" | "presentation" | "training" | "maintenance";
   organizer: string;
   attendees: string[];
   department: string;
@@ -81,7 +80,7 @@ export interface Announcement {
   content: string;
   author: string;
   department: string;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
   pinned: boolean;
   date: string;
   views: number;
