@@ -1,7 +1,7 @@
 import type { Officer } from "@/types";
 
 export const initialOfficers: Officer[] = [
-  //ADmin Level
+  //   Level
   {
     id: 1,
     name: "Robert Johnson",

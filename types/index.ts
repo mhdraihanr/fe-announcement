@@ -80,6 +80,7 @@ export interface Announcement {
   content: string;
   author: string;
   department: string;
+  accessLevel: "Admin" | "SVP" | "VP" | "Officer" | "Employee";
   priority: "high" | "medium" | "low";
   pinned: boolean;
   date: string;
@@ -96,6 +97,8 @@ export interface Announcement {
     department: string;
     role: string;
   }>;
+  imageUrl?: string;
+  linkUrl?: string;
 }
 
 export interface Notification {

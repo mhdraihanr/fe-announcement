@@ -96,7 +96,6 @@ export default function Header({
               width={24}
               height={24}
               className="lg:w-8 lg:h-8 flex-shrink-0 object-contain"
-
             />
             <h1 className="text-lg lg:text-xl font-semibold text-foreground hidden sm:block">
               PT. Pupuk Kujang
@@ -107,10 +106,7 @@ export default function Header({
         <div className="flex-1 max-w-xs lg:max-w-sm mx-2 lg:mx-6 hidden md:block">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Search..."
-              className="pl-10 h-9"
-            />
+            <Input placeholder="Search..." className="pl-10 h-9" />
           </div>
         </div>
 
@@ -126,7 +122,7 @@ export default function Header({
               <Menu className="h-4 w-4" />
             </Button>
           )}
-          
+
           {/* Role Selector */}
           <Select value={currentUser.role} onValueChange={handleRoleChange}>
             <SelectTrigger className="w-16 lg:w-24 h-8 text-xs hidden sm:flex">
@@ -134,7 +130,11 @@ export default function Header({
             </SelectTrigger>
             <SelectContent>
               {roles.map((role) => (
-                <SelectItem key={role.value} value={role.value} className="text-xs">
+                <SelectItem
+                  key={role.value}
+                  value={role.value}
+                  className="text-xs"
+                >
                   {role.value}
                 </SelectItem>
               ))}
@@ -195,7 +195,9 @@ export default function Header({
                   <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="text-left hidden lg:block">
-                  <p className="text-sm font-medium truncate max-w-24">{currentUser.name}</p>
+                  <p className="text-sm font-medium truncate max-w-24">
+                    {currentUser.name}
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     {currentUser.role}
                   </p>
@@ -205,11 +207,11 @@ export default function Header({
             <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => router.push('/settings')}>
+              <DropdownMenuItem onClick={() => router.push("/settings")}>
                 <UserIcon className="mr-2 h-4 w-4" />
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push('/settings')}>
+              <DropdownMenuItem onClick={() => router.push("/settings")}>
                 <Settings className="mr-2 h-4 w-4" />
                 Settings
               </DropdownMenuItem>
@@ -220,8 +222,6 @@ export default function Header({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
-
         </div>
       </div>
     </header>

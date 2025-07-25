@@ -50,6 +50,8 @@ import {
   Trash2,
   MoreVertical,
   PinOff,
+  Upload,
+  X,
 } from "lucide-react";
 
 interface AnnouncementBoardProps {
@@ -68,7 +70,13 @@ export default function AnnouncementBoard({
     priority: "medium",
     departments: [] as string[],
     tags: "",
+    accessLevel: "Employee",
+    imageUrl: "",
+    linkUrl: "",
   });
+
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
 
   const [filterPriority, setFilterPriority] = useState("all");
   const [filterDepartment, setFilterDepartment] = useState("all");
@@ -79,6 +87,32 @@ export default function AnnouncementBoard({
   const canCreateAnnouncement = ["Admin", "SVP", "VP", "Officer"].includes(
     currentUser.role
   );
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64String = event.target?.result as string;
+        setImagePreview(base64String);
+        setNewAnnouncement({
+          ...newAnnouncement,
+          imageUrl: base64String,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    setImagePreview("");
+    setNewAnnouncement({
+      ...newAnnouncement,
+      imageUrl: "",
+    });
+  };
 
   const filteredAnnouncements = announcements
     .filter(
@@ -115,6 +149,14 @@ export default function AnnouncementBoard({
         .filter((tag) => tag),
       readBy: [],
       viewers: [],
+      accessLevel: newAnnouncement.accessLevel as
+        | "Admin"
+        | "SVP"
+        | "VP"
+        | "Officer"
+        | "Employee",
+      imageUrl: newAnnouncement.imageUrl,
+      linkUrl: newAnnouncement.linkUrl,
     };
 
     setAnnouncements([announcement, ...announcements]);
@@ -124,7 +166,12 @@ export default function AnnouncementBoard({
       priority: "medium",
       departments: [],
       tags: "",
+      accessLevel: "Employee",
+      imageUrl: "",
+      linkUrl: "",
     });
+    setSelectedImage(null);
+    setImagePreview("");
     setDialogOpen(false);
   };
 
@@ -136,7 +183,12 @@ export default function AnnouncementBoard({
       priority: announcement.priority,
       departments: announcement.department.split(", "),
       tags: announcement.tags.join(", "),
+      accessLevel: announcement.accessLevel || "Employee",
+      imageUrl: announcement.imageUrl || "",
+      linkUrl: announcement.linkUrl || "",
     });
+    setSelectedImage(null);
+    setImagePreview(announcement.imageUrl || "");
     setDialogOpen(true);
   };
 
@@ -153,6 +205,14 @@ export default function AnnouncementBoard({
         .split(",")
         .map((tag) => tag.trim())
         .filter((tag) => tag),
+      accessLevel: newAnnouncement.accessLevel as
+        | "Admin"
+        | "SVP"
+        | "VP"
+        | "Officer"
+        | "Employee",
+      imageUrl: newAnnouncement.imageUrl,
+      linkUrl: newAnnouncement.linkUrl,
     };
 
     setAnnouncements((prev) =>
@@ -170,7 +230,12 @@ export default function AnnouncementBoard({
       priority: "medium",
       departments: [],
       tags: "",
+      accessLevel: "Employee",
+      imageUrl: "",
+      linkUrl: "",
     });
+    setSelectedImage(null);
+    setImagePreview("");
     setDialogOpen(false);
   };
 
@@ -259,7 +324,9 @@ export default function AnnouncementBoard({
     <div className="space-y-4 lg:space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="min-w-0 flex-1">
-          <h2 className="text-2xl lg:text-3xl font-bold tracking-tight">Announcements</h2>
+          <h2 className="text-2xl lg:text-3xl font-bold tracking-tight">
+            Announcements
+          </h2>
           <p className="text-sm lg:text-base text-muted-foreground">
             Stay updated with company news and updates
           </p>
@@ -272,7 +339,7 @@ export default function AnnouncementBoard({
                 New Announcement
               </Button>
             </DialogTrigger>
-            <DialogContent className="w-[95vw] max-w-[425px] mx-2">
+            <DialogContent className="w-[95vw] max-w-[600px] mx-2 max-h-[85vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
                   {editingAnnouncement
@@ -306,6 +373,61 @@ export default function AnnouncementBoard({
                     })
                   }
                   className="min-h-[100px]"
+                />
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Image (optional)</Label>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex gap-2">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="flex-1"
+                      />
+                      {(selectedImage || newAnnouncement.imageUrl) && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={handleRemoveImage}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                    <Input
+                      placeholder="Or paste image URL"
+                      value={newAnnouncement.imageUrl}
+                      onChange={(e) =>
+                        setNewAnnouncement({
+                          ...newAnnouncement,
+                          imageUrl: e.target.value,
+                        })
+                      }
+                    />
+                    {(imagePreview || newAnnouncement.imageUrl) && (
+                      <div className="mt-2">
+                        <img
+                          src={imagePreview || newAnnouncement.imageUrl}
+                          alt="Preview"
+                          className="max-w-full h-32 object-cover rounded border"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <Input
+                  placeholder="Link URL (optional)"
+                  value={newAnnouncement.linkUrl}
+                  onChange={(e) =>
+                    setNewAnnouncement({
+                      ...newAnnouncement,
+                      linkUrl: e.target.value,
+                    })
+                  }
                 />
                 <Select
                   value={newAnnouncement.priority}
@@ -378,6 +500,26 @@ export default function AnnouncementBoard({
                     })
                   }
                 />
+                <Select
+                  value={newAnnouncement.accessLevel}
+                  onValueChange={(value) =>
+                    setNewAnnouncement({
+                      ...newAnnouncement,
+                      accessLevel: value,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Access Level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Employee">Employee Access</SelectItem>
+                    <SelectItem value="Officer">Officer Access</SelectItem>
+                    <SelectItem value="VP">VP Access</SelectItem>
+                    <SelectItem value="SVP">SVP Access</SelectItem>
+                    <SelectItem value="Admin">Admin Access</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <DialogFooter>
                 <Button
@@ -400,9 +542,14 @@ export default function AnnouncementBoard({
                         title: "",
                         content: "",
                         priority: "medium",
+                        accessLevel: "Employee",
                         departments: [],
                         tags: "",
+                        imageUrl: "",
+                        linkUrl: "",
                       });
+                      setSelectedImage(null);
+                      setImagePreview("");
                       setDialogOpen(false);
                     }}
                   >
@@ -544,7 +691,35 @@ export default function AnnouncementBoard({
               </div>
             </CardHeader>
             <CardContent className="p-4 lg:p-6 pt-0">
-              <p className="text-sm lg:text-base text-foreground mb-4 break-words">{announcement.content}</p>
+              <p className="text-sm lg:text-base text-foreground mb-4 break-words">
+                {announcement.content}
+              </p>
+              
+              {announcement.imageUrl && (
+                <div className="mb-4">
+                  <img 
+                    src={announcement.imageUrl} 
+                    alt="Announcement image" 
+                    className="max-w-full h-auto rounded-lg border"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                </div>
+              )}
+              
+              {announcement.linkUrl && (
+                <div className="mb-4">
+                  <a 
+                    href={announcement.linkUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-blue-600 hover:text-blue-800 underline break-all"
+                  >
+                    🔗 {announcement.linkUrl}
+                  </a>
+                </div>
+              )}
 
               <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 lg:gap-0">
                 <div className="flex flex-wrap gap-1 lg:gap-2">

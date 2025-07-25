@@ -55,7 +55,7 @@ export const initialEvents: Event[] = [
     endTime: "11:30",
     location: "Main Hall",
     type: "presentation",
-    organizer: "CEO",
+    organizer: "Administrator",
     attendees: ["All Employees"],
     department: "General",
     isPrivate: false,
