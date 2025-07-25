@@ -114,7 +114,28 @@ export default function AnnouncementBoard({
     });
   };
 
+  // Role hierarchy for access control
+  const getRoleHierarchy = (role: string): number => {
+    switch (role) {
+      case "Admin": return 5;
+      case "SVP": return 4;
+      case "VP": return 3;
+      case "Officer": return 2;
+      case "Employee": return 1;
+      default: return 0;
+    }
+  };
+
+  const canViewAnnouncement = (announcement: Announcement): boolean => {
+    const userRoleLevel = getRoleHierarchy(currentUser.role);
+    const announcementAccessLevel = getRoleHierarchy(announcement.accessLevel);
+    
+    // User can view announcements at their level or below
+    return userRoleLevel >= announcementAccessLevel;
+  };
+
   const filteredAnnouncements = announcements
+    .filter(canViewAnnouncement)
     .filter(
       (announcement) =>
         filterPriority === "all" || announcement.priority === filterPriority
@@ -375,7 +396,9 @@ export default function AnnouncementBoard({
                   className="min-h-[100px]"
                 />
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">Image (optional)</Label>
+                  <Label className="text-sm font-medium">
+                    Image (optional)
+                  </Label>
                   <div className="flex flex-col gap-2">
                     <div className="flex gap-2">
                       <Input
@@ -412,7 +435,7 @@ export default function AnnouncementBoard({
                           alt="Preview"
                           className="max-w-full h-32 object-cover rounded border"
                           onError={(e) => {
-                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.style.display = "none";
                           }}
                         />
                       </div>
@@ -694,25 +717,25 @@ export default function AnnouncementBoard({
               <p className="text-sm lg:text-base text-foreground mb-4 break-words">
                 {announcement.content}
               </p>
-              
+
               {announcement.imageUrl && (
                 <div className="mb-4">
-                  <img 
-                    src={announcement.imageUrl} 
-                    alt="Announcement image" 
+                  <img
+                    src={announcement.imageUrl}
+                    alt="Announcement image"
                     className="max-w-full h-auto rounded-lg border"
                     onError={(e) => {
-                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.style.display = "none";
                     }}
                   />
                 </div>
               )}
-              
+
               {announcement.linkUrl && (
                 <div className="mb-4">
-                  <a 
-                    href={announcement.linkUrl} 
-                    target="_blank" 
+                  <a
+                    href={announcement.linkUrl}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center text-blue-600 hover:text-blue-800 underline break-all"
                   >
