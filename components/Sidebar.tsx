@@ -15,6 +15,7 @@ import {
   Settings,
   BarChart3,
   Shield,
+  X,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -140,6 +141,18 @@ export default function Sidebar({
           "lg:relative fixed inset-y-0 left-0 z-50 lg:z-auto"
         )}
       >
+        {/* Hamburger menu button inside sidebar */}
+        <div className="flex justify-end p-3 lg:hidden">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSidebarOpen(false)}
+            className="h-8 w-8"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+        
       <div className="p-4 lg:p-6">
         <div className="text-center min-w-0">
           <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-full mx-auto mb-2 lg:mb-3 flex items-center justify-center">

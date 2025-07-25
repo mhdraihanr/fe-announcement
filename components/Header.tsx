@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { User, Notification } from "@/types";
 import {
   Bell,
@@ -47,6 +48,7 @@ export default function Header({
   sidebarOpen,
   setSidebarOpen,
 }: HeaderProps) {
+  const router = useRouter();
   const [notifications] = useState<Notification[]>([
     { id: 1, title: "New document shared", time: "5 min ago", unread: true },
     { id: 2, title: "Meeting reminder", time: "10 min ago", unread: true },
@@ -113,6 +115,18 @@ export default function Header({
         </div>
 
         <div className="flex items-center space-x-1 lg:space-x-3">
+          {/* Mobile menu trigger - only show when sidebar is closed */}
+          {!sidebarOpen && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden"
+            >
+              <Menu className="h-4 w-4" />
+            </Button>
+          )}
+          
           {/* Role Selector */}
           <Select value={currentUser.role} onValueChange={handleRoleChange}>
             <SelectTrigger className="w-16 lg:w-24 h-8 text-xs hidden sm:flex">
@@ -191,11 +205,11 @@ export default function Header({
             <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/settings')}>
                 <UserIcon className="mr-2 h-4 w-4" />
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/settings')}>
                 <Settings className="mr-2 h-4 w-4" />
                 Settings
               </DropdownMenuItem>
@@ -207,19 +221,7 @@ export default function Header({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Mobile hamburger menu - right side */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden"
-          >
-            {sidebarOpen ? (
-              <X className="h-4 w-4" />
-            ) : (
-              <Menu className="h-4 w-4" />
-            )}
-          </Button>
+
         </div>
       </div>
     </header>
