@@ -71,13 +71,15 @@ export default function Header({
   const unreadCount = notifications.filter((n) => n.unread).length;
 
   return (
-    <header className="bg-background border-b border-border px-6 py-4">
+    <header className="bg-background border-b border-border px-3 lg:px-6 py-3 lg:py-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-1 lg:space-x-2">
+          {/* Desktop hamburger menu - left side */}
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="hidden lg:flex"
           >
             {sidebarOpen ? (
               <X className="h-4 w-4" />
@@ -85,21 +87,22 @@ export default function Header({
               <Menu className="h-4 w-4" />
             )}
           </Button>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 lg:space-x-2">
             <img
               src="/download__1_-removebg-preview.png"
               alt="PT. Pupuk Kujang Logo"
-              width={32}
-              height={32}
-              className="flex-shrink-0 object-contain"
+              width={24}
+              height={24}
+              className="lg:w-8 lg:h-8 flex-shrink-0 object-contain"
+
             />
-            <h1 className="text-xl font-semibold text-foreground">
+            <h1 className="text-lg lg:text-xl font-semibold text-foreground hidden sm:block">
               PT. Pupuk Kujang
             </h1>
           </div>
         </div>
 
-        <div className="flex-1 max-w-sm mx-6">
+        <div className="flex-1 max-w-xs lg:max-w-sm mx-2 lg:mx-6 hidden md:block">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
@@ -109,10 +112,10 @@ export default function Header({
           </div>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-1 lg:space-x-3">
           {/* Role Selector */}
           <Select value={currentUser.role} onValueChange={handleRoleChange}>
-            <SelectTrigger className="w-24 h-8 text-xs">
+            <SelectTrigger className="w-16 lg:w-24 h-8 text-xs hidden sm:flex">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -139,7 +142,7 @@ export default function Header({
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-80" align="end">
+            <DropdownMenuContent className="w-72 lg:w-80" align="end">
               <DropdownMenuLabel>Notifications</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {notifications.map((notification) => (
@@ -168,17 +171,17 @@ export default function Header({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="flex items-center space-x-2 p-2"
+                className="flex items-center space-x-1 lg:space-x-2 p-1 lg:p-2"
               >
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-7 w-7 lg:h-8 lg:w-8">
                   <AvatarImage
                     src={currentUser.avatar}
                     alt={currentUser.name}
                   />
                   <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <div className="text-left">
-                  <p className="text-sm font-medium">{currentUser.name}</p>
+                <div className="text-left hidden lg:block">
+                  <p className="text-sm font-medium truncate max-w-24">{currentUser.name}</p>
                   <p className="text-xs text-muted-foreground">
                     {currentUser.role}
                   </p>
@@ -203,6 +206,20 @@ export default function Header({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Mobile hamburger menu - right side */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="lg:hidden"
+          >
+            {sidebarOpen ? (
+              <X className="h-4 w-4" />
+            ) : (
+              <Menu className="h-4 w-4" />
+            )}
+          </Button>
         </div>
       </div>
     </header>

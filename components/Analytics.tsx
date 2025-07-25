@@ -100,19 +100,19 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-4 lg:space-y-6">
+      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center space-y-4 lg:space-y-0">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">
+          <h2 className="text-2xl lg:text-3xl font-bold tracking-tight">
             Analytics Dashboard
           </h2>
           <p className="text-muted-foreground">
             Track engagement and views for announcements and documents
           </p>
         </div>
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-2 lg:gap-4">
           <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-full sm:w-[140px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -122,7 +122,7 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
             </SelectContent>
           </Select>
           <Select value={selectedType} onValueChange={setSelectedType}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-full sm:w-[140px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -135,17 +135,17 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
       </div>
 
       {/* Overview Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 lg:gap-4">
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 lg:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
+                <p className="text-xs lg:text-sm font-medium text-muted-foreground">
                   Total Read
                 </p>
-                <p className="text-2xl font-bold">{totalReads}</p>
+                <p className="text-xl lg:text-2xl font-bold">{totalReads}</p>
               </div>
-              <Eye className="h-8 w-8 text-blue-600" />
+              <Eye className="h-6 w-6 lg:h-8 lg:w-8 text-blue-600" />
             </div>
           </CardContent>
         </Card>
@@ -156,9 +156,9 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
                 <p className="text-sm font-medium text-muted-foreground">
                   Total Unread
                 </p>
-                <p className="text-2xl font-bold">{totalUnreads}</p>
+                <p className="text-xl lg:text-2xl font-bold">{totalUnreads}</p>
               </div>
-              <Users className="h-8 w-8 text-red-600" />
+              <Users className="h-6 w-6 lg:h-8 lg:w-8 text-red-600" />
             </div>
           </CardContent>
         </Card>
@@ -169,9 +169,9 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
                 <p className="text-sm font-medium text-muted-foreground">
                   Total Downloads
                 </p>
-                <p className="text-2xl font-bold">{totalDownloads}</p>
+                <p className="text-xl lg:text-2xl font-bold">{totalDownloads}</p>
               </div>
-              <Download className="h-8 w-8 text-green-600" />
+              <Download className="h-6 w-6 lg:h-8 lg:w-8 text-green-600" />
             </div>
           </CardContent>
         </Card>
@@ -182,9 +182,9 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
                 <p className="text-sm font-medium text-muted-foreground">
                   Read Rate
                 </p>
-                <p className="text-2xl font-bold">{readRate}%</p>
+                <p className="text-xl lg:text-2xl font-bold">{readRate}%</p>
               </div>
-              <TrendingUp className="h-8 w-8 text-purple-600" />
+              <TrendingUp className="h-6 w-6 lg:h-8 lg:w-8 text-purple-600" />
             </div>
           </CardContent>
         </Card>
@@ -195,9 +195,9 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
                 <p className="text-sm font-medium text-muted-foreground">
                   Total Items
                 </p>
-                <p className="text-2xl font-bold">{filteredData.length}</p>
+                <p className="text-xl lg:text-2xl font-bold">{filteredData.length}</p>
               </div>
-              <BarChart3 className="h-8 w-8 text-orange-600" />
+              <BarChart3 className="h-6 w-6 lg:h-8 lg:w-8 text-orange-600" />
             </div>
           </CardContent>
         </Card>
@@ -210,15 +210,15 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
           const isExpanded = expandedItems.includes(item.id);
           return (
             <Card key={item.id}>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
+              <CardHeader className="p-4 lg:p-6">
+                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between space-y-4 lg:space-y-0">
+                  <div className="flex items-center gap-2 lg:gap-3">
                     <div className="p-2 bg-primary/10 rounded-lg">
                       <TypeIcon className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <CardTitle className="text-lg">{item.title}</CardTitle>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <CardTitle className="text-base lg:text-lg">{item.title}</CardTitle>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs lg:text-sm text-muted-foreground">
                         <span>{item.department}</span>
                         <span>
                           {new Date(item.createdDate).toLocaleDateString()}
@@ -229,19 +229,19 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4">
                     <div className="text-right">
-                      <div className="flex items-center gap-4">
-                        <div className="text-center">
-                          <p className="text-2xl font-bold text-blue-600">
+                      <div className="flex items-center gap-2 lg:gap-4">
+                        <div className="text-center min-w-0">
+                          <p className="text-lg lg:text-2xl font-bold text-blue-600">
                             {item.reads}
                           </p>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-xs text-muted-foreground hidden sm:block">
                             Total Read
                           </p>
                         </div>
                         <div className="text-center">
-                          <p className="text-2xl font-bold text-red-600">
+                          <p className="text-lg lg:text-2xl font-bold text-red-600">
                             {item.totalUsers - item.reads}
                           </p>
                           <p className="text-xs text-muted-foreground">
@@ -250,10 +250,10 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
                         </div>
                         {item.type === "document" && (
                           <div className="text-center">
-                            <p className="text-2xl font-bold text-green-600">
+                            <p className="text-lg lg:text-2xl font-bold text-green-600">
                               {item.downloads}
                             </p>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs text-muted-foreground hidden sm:block">
                               Downloads
                             </p>
                           </div>
@@ -264,7 +264,7 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
                       variant="outline"
                       size="sm"
                       onClick={() => toggleExpanded(item.id)}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-1 lg:gap-2 text-sm lg:text-base"
                     >
                       Detail
                       {isExpanded ? (
@@ -277,21 +277,21 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
                 </div>
               </CardHeader>
               {isExpanded && (
-                <CardContent>
+                <CardContent className="p-4 lg:p-6">
                   <Tabs defaultValue="viewers" className="w-full">
                     <TabsList>
                       <TabsTrigger value="viewers">Recent Viewers</TabsTrigger>
                       <TabsTrigger value="stats">Statistics</TabsTrigger>
                     </TabsList>
                     <TabsContent value="viewers" className="space-y-4">
-                      <div className="grid gap-3">
+                      <div className="grid gap-2 lg:gap-3">
                         {item.viewers.map((viewer, index) => (
                           <div
                             key={index}
-                            className="flex items-center justify-between p-3 rounded-lg border"
+                            className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 rounded-lg border space-y-2 sm:space-y-0"
                           >
-                            <div className="flex items-center gap-3">
-                              <Avatar className="h-8 w-8">
+                            <div className="flex items-center gap-2 lg:gap-3">
+                              <Avatar className="h-7 w-7 lg:h-8 lg:w-8">
                                 <AvatarImage
                                   src={viewer.avatar}
                                   alt={viewer.name}
@@ -301,8 +301,8 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
                                 </AvatarFallback>
                               </Avatar>
                               <div>
-                                <p className="font-medium">{viewer.name}</p>
-                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <p className="font-medium text-sm lg:text-base">{viewer.name}</p>
+                                <div className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm text-muted-foreground">
                                   <span>{viewer.department}</span>
                                   <Badge variant="outline" className="text-xs">
                                     {viewer.role}
@@ -310,8 +310,8 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
                                 </div>
                               </div>
                             </div>
-                            <div className="text-right">
-                              <p className="text-sm font-medium">
+                            <div className="text-right sm:text-left lg:text-right">
+                              <p className="text-xs lg:text-sm font-medium">
                                 {new Date(viewer.viewedAt).toLocaleString()}
                               </p>
                             </div>
@@ -320,8 +320,8 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
                       </div>
                     </TabsContent>
                     <TabsContent value="stats" className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="p-4 rounded-lg border">
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4">
+                        <div className="p-3 lg:p-4 rounded-lg border">
                           <div className="flex items-center gap-2">
                             {item.type === "document" ? (
                               <Download className="h-4 w-4 text-green-600" />
@@ -334,7 +334,7 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
                                 : "View Rate"}
                             </span>
                           </div>
-                          <p className="text-2xl font-bold mt-2">
+                          <p className="text-xl lg:text-2xl font-bold mt-2">
                             {item.type === "document" && item.downloads
                               ? ((item.downloads / item.reads) * 100).toFixed(1)
                               : ((item.reads / item.totalUsers) * 100).toFixed(
@@ -343,14 +343,14 @@ export default function Analytics({ currentUser }: AnalyticsProps) {
                             %
                           </p>
                         </div>
-                        <div className="p-4 rounded-lg border">
+                        <div className="p-3 lg:p-4 rounded-lg border">
                           <div className="flex items-center gap-2">
                             <Calendar className="h-4 w-4 text-green-600" />
                             <span className="text-sm font-medium">
                               Days Active
                             </span>
                           </div>
-                          <p className="text-2xl font-bold mt-2">
+                          <p className="text-xl lg:text-2xl font-bold mt-2">
                             {Math.ceil(
                               (new Date().getTime() -
                                 new Date(item.createdDate).getTime()) /

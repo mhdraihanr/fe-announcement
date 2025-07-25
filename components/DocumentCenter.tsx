@@ -156,11 +156,11 @@ export default function DocumentCenter({ currentUser }: DocumentCenterProps) {
   const accessibleDocuments = documents.filter((doc) => canAccessDocument(doc));
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Document Center</h2>
-          <p className="text-muted-foreground">
+    <div className="space-y-4 lg:space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-2xl lg:text-3xl font-bold tracking-tight">Document Center</h2>
+          <p className="text-sm lg:text-base text-muted-foreground">
             Manage and share documents with role-based access
           </p>
         </div>
@@ -172,7 +172,7 @@ export default function DocumentCenter({ currentUser }: DocumentCenterProps) {
                 Upload Document
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="w-[95vw] max-w-[425px] mx-2">
               <DialogHeader>
                 <DialogTitle>Upload New Document</DialogTitle>
                 <DialogDescription>
@@ -214,7 +214,7 @@ export default function DocumentCenter({ currentUser }: DocumentCenterProps) {
                   <Label className="text-sm font-medium">
                     Pilih Departemen:
                   </Label>
-                  <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto">
                     {departments.map((dept) => (
                       <div key={dept} className="flex items-center space-x-2">
                         <input
@@ -265,34 +265,34 @@ export default function DocumentCenter({ currentUser }: DocumentCenterProps) {
       </div>
 
       {/* Document Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-4">
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-3 lg:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
+                <p className="text-xs lg:text-sm font-medium text-muted-foreground">
                   Total Documents
                 </p>
-                <p className="text-2xl font-bold">
+                <p className="text-lg lg:text-2xl font-bold">
                   {accessibleDocuments.length}
                 </p>
               </div>
-              <FileText className="h-8 w-8 text-blue-600" />
+              <FileText className="h-6 w-6 lg:h-8 lg:w-8 text-blue-600" />
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-6">
+           <CardContent className="p-3 lg:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
+                <p className="text-xs lg:text-sm font-medium text-muted-foreground">
                   Shared
                 </p>
-                <p className="text-2xl font-bold">
+                <p className="text-lg lg:text-2xl font-bold">
                   {accessibleDocuments.filter((d) => d.shared).length}
                 </p>
               </div>
-              <Share2 className="h-8 w-8 text-green-600" />
+              <Share2 className="h-6 w-6 lg:h-8 lg:w-8 text-green-600" />
             </div>
           </CardContent>
         </Card>
@@ -307,7 +307,7 @@ export default function DocumentCenter({ currentUser }: DocumentCenterProps) {
                   {accessibleDocuments.reduce((sum, d) => sum + d.views, 0)}
                 </p>
               </div>
-              <Eye className="h-8 w-8 text-purple-600" />
+              <Eye className="h-6 w-6 lg:h-8 lg:w-8 text-purple-600" />
             </div>
           </CardContent>
         </Card>
@@ -322,7 +322,7 @@ export default function DocumentCenter({ currentUser }: DocumentCenterProps) {
                   {accessibleDocuments.reduce((sum, d) => sum + d.downloads, 0)}
                 </p>
               </div>
-              <Download className="h-8 w-8 text-orange-600" />
+              <Download className="h-6 w-6 lg:h-8 lg:w-8 text-orange-600" />
             </div>
           </CardContent>
         </Card>
@@ -337,15 +337,15 @@ export default function DocumentCenter({ currentUser }: DocumentCenterProps) {
               key={document.id}
               className="hover:shadow-md transition-shadow"
             >
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4 flex-1">
+              <CardContent className="p-4 lg:p-6">
+                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 lg:gap-0">
+                  <div className="flex items-center space-x-2 lg:space-x-4 flex-1 min-w-0 w-full lg:w-auto">
                     <div className="p-2 bg-primary/10 rounded-lg">
                       <FileIcon className="h-6 w-6 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium truncate">{document.name}</h3>
-                      <div className="flex items-center space-x-4 text-sm text-muted-foreground mt-1">
+                      <h3 className="font-medium text-sm lg:text-base truncate">{document.name}</h3>
+                      <div className="flex flex-wrap items-center gap-1 lg:gap-4 text-xs lg:text-sm text-muted-foreground mt-1">
                         <span className="flex items-center gap-1">
                           <Users className="h-3 w-3" />
                           {document.uploadedBy}
@@ -360,8 +360,8 @@ export default function DocumentCenter({ currentUser }: DocumentCenterProps) {
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-2">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 lg:gap-4 flex-shrink-0">
+                    <div className="flex flex-wrap items-center gap-1 lg:gap-2">
                       <Badge
                         variant={getAccessLevelColor(document.accessLevel)}
                       >
@@ -376,7 +376,7 @@ export default function DocumentCenter({ currentUser }: DocumentCenterProps) {
                       )}
                     </div>
 
-                    <div className="flex items-center space-x-1 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1 text-xs lg:text-sm text-muted-foreground">
                       <Eye className="h-4 w-4" />
                       <span>{document.views}</span>
                       <Download className="h-4 w-4 ml-2" />

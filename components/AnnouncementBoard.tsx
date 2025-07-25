@@ -256,11 +256,11 @@ export default function AnnouncementBoard({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Announcements</h2>
-          <p className="text-muted-foreground">
+    <div className="space-y-4 lg:space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-2xl lg:text-3xl font-bold tracking-tight">Announcements</h2>
+          <p className="text-sm lg:text-base text-muted-foreground">
             Stay updated with company news and updates
           </p>
         </div>
@@ -272,7 +272,7 @@ export default function AnnouncementBoard({
                 New Announcement
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="w-[95vw] max-w-[425px] mx-2">
               <DialogHeader>
                 <DialogTitle>
                   {editingAnnouncement
@@ -329,7 +329,7 @@ export default function AnnouncementBoard({
                   <Label className="text-sm font-medium">
                     Pilih Departemen:
                   </Label>
-                  <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto">
                     {departments.map((dept) => (
                       <div key={dept} className="flex items-center space-x-2">
                         <input
@@ -424,9 +424,9 @@ export default function AnnouncementBoard({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-2 lg:gap-4">
             <Select value={filterPriority} onValueChange={setFilterPriority}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px]">
                 <SelectValue placeholder="Filter by priority" />
               </SelectTrigger>
               <SelectContent>
@@ -440,7 +440,7 @@ export default function AnnouncementBoard({
               value={filterDepartment}
               onValueChange={setFilterDepartment}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px]">
                 <SelectValue placeholder="Filter by department" />
               </SelectTrigger>
               <SelectContent>
@@ -467,24 +467,24 @@ export default function AnnouncementBoard({
                 : ""
             } hover:shadow-md transition-shadow`}
           >
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
+            <CardHeader className="p-4 lg:p-6">
+              <div className="flex flex-col lg:flex-row items-start justify-between gap-3 lg:gap-0">
+                <div className="flex-1 min-w-0 w-full lg:w-auto">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
                     {announcement.pinned && (
                       <Pin className="h-4 w-4 text-primary" />
                     )}
                     {!announcement.readBy.includes(currentUser.id) && (
                       <div className="w-2 h-2 bg-blue-500 rounded-full" />
                     )}
-                    <CardTitle className="text-xl">
+                    <CardTitle className="text-lg lg:text-xl break-words">
                       {announcement.title}
                     </CardTitle>
                     <Badge variant={getPriorityColor(announcement.priority)}>
                       {announcement.priority}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-2 lg:gap-4 text-xs lg:text-sm text-muted-foreground">
                     <span>By {announcement.author}</span>
                     <span>{announcement.department}</span>
                     <span>
@@ -492,7 +492,7 @@ export default function AnnouncementBoard({
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-shrink-0">
                   {(canEditOrDelete(announcement) || canPin(announcement)) && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -535,7 +535,7 @@ export default function AnnouncementBoard({
                       </DropdownMenuContent>
                     </DropdownMenu>
                   )}
-                  <Avatar>
+                  <Avatar className="h-8 w-8 lg:h-10 lg:w-10">
                     <AvatarFallback>
                       {announcement.author.charAt(0)}
                     </AvatarFallback>
@@ -543,11 +543,11 @@ export default function AnnouncementBoard({
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
-              <p className="text-foreground mb-4">{announcement.content}</p>
+            <CardContent className="p-4 lg:p-6 pt-0">
+              <p className="text-sm lg:text-base text-foreground mb-4 break-words">{announcement.content}</p>
 
-              <div className="flex items-center justify-between">
-                <div className="flex gap-2">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 lg:gap-0">
+                <div className="flex flex-wrap gap-1 lg:gap-2">
                   {announcement.tags.map((tag, index) => (
                     <Badge key={index} variant="outline" className="text-xs">
                       {tag}
@@ -555,7 +555,7 @@ export default function AnnouncementBoard({
                   ))}
                 </div>
 
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-2 lg:gap-4 text-xs lg:text-sm text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <Eye className="h-4 w-4" />
                     {announcement.views}

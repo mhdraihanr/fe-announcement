@@ -261,9 +261,9 @@ export default function ChatSystem({ currentUser }: ChatSystemProps) {
   const activeChannelInfo = channels.find((c) => c.id === activeChannel);
 
   return (
-    <div className="h-[calc(100vh-200px)] flex">
+    <div className="h-[calc(100vh-200px)] flex flex-col lg:flex-row">
       {/* Channels Sidebar */}
-      <div className="w-80 bg-background border-r border-border">
+      <div className="w-full lg:w-80 bg-background border-r-0 lg:border-r border-b lg:border-b-0 border-border">
         <div className="p-4 border-b">
           <h3 className="font-semibold text-lg">Chat Channels</h3>
           <p className="text-sm text-muted-foreground">
@@ -291,17 +291,17 @@ export default function ChatSystem({ currentUser }: ChatSystemProps) {
                       className="w-full justify-start h-auto p-3"
                       onClick={() => setActiveChannel(channel.id)}
                     >
-                      <div className="flex items-center space-x-3 w-full">
-                        <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 lg:space-x-3 w-full">
+                        <div className="flex items-center space-x-1 lg:space-x-2">
                           <Pin className="h-3 w-3 text-yellow-500" />
                           {channel.type === "private" ? (
                             <Users className="h-4 w-4" />
                           ) : (
                             <Hash className="h-4 w-4" />
                           )}
-                          <span className="font-medium">{channel.name}</span>
+                          <span className="font-medium text-sm lg:text-base truncate">{channel.name}</span>
                         </div>
-                        <div className="ml-auto flex items-center space-x-1">
+                        <div className="ml-auto flex items-center space-x-1 flex-shrink-0">
                           {channel.unread > 0 && (
                             <Badge
                               variant="destructive"
@@ -310,7 +310,7 @@ export default function ChatSystem({ currentUser }: ChatSystemProps) {
                               {channel.unread}
                             </Badge>
                           )}
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-xs text-muted-foreground hidden sm:inline">
                             {channel.members}
                           </span>
                         </div>
@@ -336,16 +336,16 @@ export default function ChatSystem({ currentUser }: ChatSystemProps) {
                   className="w-full justify-start h-auto p-3"
                   onClick={() => setActiveChannel(channel.id)}
                 >
-                  <div className="flex items-center space-x-3 w-full">
-                    <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 lg:space-x-3 w-full">
+                    <div className="flex items-center space-x-1 lg:space-x-2">
                       {channel.type === "private" ? (
                         <Users className="h-4 w-4" />
                       ) : (
                         <Hash className="h-4 w-4" />
                       )}
-                      <span className="font-medium">{channel.name}</span>
+                      <span className="font-medium text-sm lg:text-base truncate">{channel.name}</span>
                     </div>
-                    <div className="ml-auto flex items-center space-x-1">
+                    <div className="ml-auto flex items-center space-x-1 flex-shrink-0">
                       {channel.unread > 0 && (
                         <Badge
                           variant="destructive"
@@ -354,7 +354,7 @@ export default function ChatSystem({ currentUser }: ChatSystemProps) {
                           {channel.unread}
                         </Badge>
                       )}
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-muted-foreground hidden sm:inline">
                         {channel.members}
                       </span>
                     </div>
@@ -368,23 +368,23 @@ export default function ChatSystem({ currentUser }: ChatSystemProps) {
       {/* Chat Area */}
       <div className="flex-1 flex flex-col">
         {/* Chat Header */}
-        <div className="p-4 border-b border-border bg-background">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+        <div className="p-2 lg:p-4 border-b border-border bg-background">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center space-x-2 lg:space-x-3 min-w-0 flex-1">
               {activeChannelInfo?.type === "private" ? (
                 <Users className="h-5 w-5" />
               ) : (
                 <Hash className="h-5 w-5" />
               )}
               <div>
-                <h3 className="font-semibold">{activeChannelInfo?.name}</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="font-semibold text-sm lg:text-base truncate">{activeChannelInfo?.name}</h3>
+                <p className="text-xs lg:text-sm text-muted-foreground hidden sm:block">
                   {activeChannelInfo?.members} members •{" "}
                   {activeChannelInfo?.type} channel
                 </p>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 lg:space-x-2 flex-shrink-0">
               {/* Add Member Dialog */}
               <Dialog open={addMemberDialog} onOpenChange={setAddMemberDialog}>
                 <DialogTrigger asChild>
@@ -392,7 +392,7 @@ export default function ChatSystem({ currentUser }: ChatSystemProps) {
                     <UserPlus className="h-4 w-4" />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[600px] max-h-[80vh] flex flex-col">
+                <DialogContent className="w-[95vw] max-w-[600px] max-h-[80vh] flex flex-col mx-2">
                   <DialogHeader className="flex-shrink-0">
                     <DialogTitle>Add Members to Channel</DialogTitle>
                     <DialogDescription>
@@ -402,8 +402,8 @@ export default function ChatSystem({ currentUser }: ChatSystemProps) {
                   </DialogHeader>
                   <div className="flex-1 py-3 space-y-3 flex flex-col min-h-0 overflow-hidden">
                     {/* Search and Copy Link Row */}
-                    <div className="flex gap-2 flex-shrink-0">
-                      <div className="flex-1 space-y-1">
+                    <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0">
+                      <div className="flex-1 space-y-1 min-w-0">
                         <Label className="text-sm">Search Officers</Label>
                         <Input
                           placeholder="Search officers..."
@@ -412,7 +412,7 @@ export default function ChatSystem({ currentUser }: ChatSystemProps) {
                           className="w-full h-8"
                         />
                       </div>
-                      <div className="space-y-1">
+                      <div className="space-y-1 flex-shrink-0">
                         <Label className="text-sm">Invite</Label>
                         <Button
                           variant="outline"
@@ -441,7 +441,7 @@ export default function ChatSystem({ currentUser }: ChatSystemProps) {
                         <Label className="text-sm">
                           Selected ({selectedOfficers.length})
                         </Label>
-                        <div className="flex flex-wrap gap-1 p-2 border rounded bg-muted/20 max-h-16 overflow-y-auto">
+                        <div className="flex flex-wrap gap-1 p-2 border rounded bg-muted/20 max-h-20 lg:max-h-16 overflow-y-auto">
                           {selectedOfficers.map((officer) => (
                             <Badge
                               key={officer.id}
@@ -457,7 +457,7 @@ export default function ChatSystem({ currentUser }: ChatSystemProps) {
                                   {officer.name.charAt(0)}
                                 </AvatarFallback>
                               </Avatar>
-                              <span className="max-w-16 truncate">
+                              <span className="max-w-12 lg:max-w-16 truncate text-xs lg:text-sm">
                                 {officer.name}
                               </span>
                               <button
@@ -685,26 +685,26 @@ export default function ChatSystem({ currentUser }: ChatSystemProps) {
         </div>
 
         {/* Messages */}
-        <ScrollArea className="flex-1 p-4">
-          <div className="space-y-4">
+        <ScrollArea className="flex-1 p-2 lg:p-4">
+          <div className="space-y-2 lg:space-y-4">
             {currentChannelMessages.map((msg) => (
-              <div key={msg.id} className="flex items-start space-x-3">
-                <Avatar className="h-8 w-8">
+              <div key={msg.id} className="flex items-start space-x-2 lg:space-x-3">
+                <Avatar className="h-6 w-6 lg:h-8 lg:w-8 flex-shrink-0">
                   <AvatarImage src={msg.avatar} alt={msg.user} />
                   <AvatarFallback>{msg.user.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-2">
-                    <span className="font-medium text-sm">{msg.user}</span>
+                  <div className="flex items-center space-x-1 lg:space-x-2 flex-wrap">
+                    <span className="font-medium text-xs lg:text-sm">{msg.user}</span>
                     <Badge variant="outline" className="text-xs">
                       {msg.role}
                     </Badge>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-muted-foreground hidden sm:inline">
                       {msg.timestamp}
                     </span>
                   </div>
                   <p
-                    className={`text-sm mt-1 ${
+                    className={`text-xs lg:text-sm mt-1 break-words ${
                       msg.isSystem
                         ? "bg-blue-50 dark:bg-blue-950/30 p-2 rounded italic"
                         : ""
@@ -720,8 +720,8 @@ export default function ChatSystem({ currentUser }: ChatSystemProps) {
         </ScrollArea>
 
         {/* Message Input */}
-        <div className="p-4 border-t border-border bg-background">
-          <div className="flex items-center space-x-2">
+        <div className="p-2 lg:p-4 border-t border-border bg-background">
+          <div className="flex items-center space-x-1 lg:space-x-2">
             <Input
               placeholder={`Message #${activeChannelInfo?.name}`}
               value={message}
