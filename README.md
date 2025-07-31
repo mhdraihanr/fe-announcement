@@ -10,4 +10,14 @@ Repositori ini berisi kode sumber antarmuka pengguna (UI) untuk sistem pengumuma
 - 📜 List dan detail pengumuman
 - 📝 Buat, edit, dan hapus pengumuman (fitur admin)
 - 📂 Kategori pengumuman
-- 📅 Tanggal tayang & ke
+- 📅 Tanggal tayang & kedaluwarsa
+- 🖼️ Upload dan preview media (gambar/file)
+- 🌐 UI responsif dan modern
+
+## 🛠️ Teknologi yang Digunakan
+
+- [Next.js](https://nextjs.org/) – Framework React untuk SSR/SSG
+- [React](https://reactjs.org/) – Library antarmuka pengguna
+- [Tailwind CSS](https://tailwindcss.com/) – Styling berbasis utility
+- [TypeScript](https://www.typescriptlang.org/) – Superset JavaScript untuk type-safety
+- [Supabase](https://supabase.com/) (opsional) – Backend-as-a-Service (jika digunakan)
